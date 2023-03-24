@@ -49,4 +49,5 @@ monosat
 monosat.jar
 monosat
 monosat_javadoc.zip
-
+setup.py
+build

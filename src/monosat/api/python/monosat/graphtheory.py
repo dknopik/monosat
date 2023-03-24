@@ -112,47 +112,23 @@ class Graph:
 
     def writeDot(self, out=sys.stdout, writeModel=True):
         print("digraph{", file=out)
-        for n in range(self.nodes):
-            print("n%d" % (n), file=out)
+        for n in self.nodemap:
+            print('"%s"' % (n), file=out)
 
         for (v, w, var, weight) in self.getEdges():
-            if not writeModel:
-                if weight:
-                    print(
-                        'n%d -> n%d [label="v%s, w%s"]' % (v, w, str(var), str(weight)),
-                        file=out,
-                    )
-                else:
-                    print('n%d -> n%d [label="v%s"]' % (v, w, str(var)), file=out)
+            edgeVal = var.value()
+            if edgeVal is None:
+                edgecol = "black"
+            elif edgeVal:
+                edgecol = "red"
             else:
-                edgeVal = var.value()
-                if edgeVal is None:
-                    edgecol = "black"
-                elif edgeVal:
-                    edgecol = "red"
-                else:
-                    edgecol = "blue"
+                edgecol = "blue"
 
-                if weight:
-                    if edgeVal is not None:
-                        weightVal = weight.value()
-                        print(
-                            'n%d -> n%d [label="v%s, w%s=%s", color=%s]'
-                            % (v, w, str(var), str(weight), str(weightVal), edgecol),
-                            file=out,
-                        )
-                    else:
-                        print(
-                            'n%d -> n%d [label="v%s, w%s"]'
-                            % (v, w, str(var), str(weight)),
-                            file=out,
-                        )
-                else:
-                    print(
-                        'n%d -> n%d [label="v%s", color=%s]'
-                        % (v, w, str(var), edgecol),
-                        file=out,
-                    )
+            print(
+                '"%s" -> "%s" [label="v%s", color=%s]'
+                % (self.names[v], self.names[w], str(var), edgecol),
+                file=out,
+            )
 
         print("}", file=out)
 
